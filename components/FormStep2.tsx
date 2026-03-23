@@ -12,6 +12,7 @@ interface FormStep2Props {
   gameMode?: string;
   teamSize?: string;
   captainName?: string;
+  teamName?: string;
   onBack: () => void;
   onComplete: () => void;
   isLoading: boolean;
@@ -38,7 +39,7 @@ function getEntryFee(eventType: string, gameType?: string, gameMode?: string): s
 // Events that use Payment_SS1; all others were by default SS2 unless overridden
 const SS1_EVENTS = new Set(['The Spiral', 'Geovoyager']);
 
-export function FormStep2({ email, eventType, gameType, gameMode, teamSize, captainName, onBack, onComplete, isLoading }: FormStep2Props) {
+export function FormStep2({ email, eventType, gameType, gameMode, teamSize, captainName, teamName, onBack, onComplete, isLoading }: FormStep2Props) {
   let qrImage = '/Payment_SS2.jpeg';
   if (eventType === 'The Spiral' || eventType === 'Geovoyager') {
     qrImage = '/Payment_SS1.jpeg';
@@ -198,6 +199,12 @@ export function FormStep2({ email, eventType, gameType, gameMode, teamSize, capt
             <div className="flex justify-between items-center">
               <span className="text-zinc-500 text-sm">Captain</span>
               <span className="text-zinc-200 text-sm font-medium">{captainName}</span>
+            </div>
+          )}
+          {teamName && (
+            <div className="flex justify-between items-center">
+              <span className="text-zinc-500 text-sm">Team Name</span>
+              <span className="text-zinc-200 text-sm font-medium">{teamName}</span>
             </div>
           )}
           <div className="flex justify-between items-center pt-2 border-t border-zinc-800 mt-1">

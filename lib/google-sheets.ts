@@ -46,11 +46,13 @@ export async function appendToSheet(
   return result.data;
 }
 
-// Finds the row where the captain email matches (column F = index 5),
-// then writes Transaction ID to column Q and Screenshot URL to column R.
+// Finds the row where the captain email matches (column G = index 6),
+// then writes Transaction ID to column V and Screenshot URL to column W.
 // Column layout per user's sheet:
-// A=Timestamp, B=EventType, C=College, D=TeamSize,
-// E=M1Name, F=M1Email, G=M1Contact, H=M2Name ... P=M4Contact, Q=TransactionID, R=ScreenshotURL
+// A=Timestamp, B=EventType, C=College, D=TeamName, E=TeamSize,
+// F=M1Name, G=M1Email, H=M1Contact, I=M1GameID, J=M2Name, K=M2Email, L=M2Contact, M=M2GameID,
+// N=M3Name, O=M3Email, P=M3Contact, Q=M3GameID, R=M4Name, S=M4Email, T=M4Contact, U=M4GameID,
+// V=TransactionID, W=ScreenshotURL
 export async function updateRowWithPayment(
   auth: any,
   spreadsheetId: string,
@@ -69,10 +71,10 @@ export async function updateRowWithPayment(
 
   const rows = response.data.values || [];
 
-  // Find the last row where captain email matches (column F = index 5)
+  // Find the last row where captain email matches (column G = index 6)
   let targetRowIndex = -1;
   for (let i = 0; i < rows.length; i++) {
-    if (rows[i][5] === captainEmail) {
+    if (rows[i][6] === captainEmail) {
       targetRowIndex = i; // keep going — match the most recent entry
     }
   }
@@ -82,9 +84,9 @@ export async function updateRowWithPayment(
     return false;
   }
 
-  // Write Transaction ID to column Q (17th col) and Screenshot URL to column R (18th col)
-  // This matches the fixed header: ...M4Contact | Transaction ID | Screenshot
-  const cellRange = `${sheetName}!Q${targetRowIndex + 1}:R${targetRowIndex + 1}`;
+  // Write Transaction ID to column V (21st col) and Screenshot URL to column W (22nd col)
+  // This matches the fixed header: ...M4GameID | Transaction ID | Screenshot
+  const cellRange = `${sheetName}!V${targetRowIndex + 1}:W${targetRowIndex + 1}`;
 
   await sheets.spreadsheets.values.update({
     spreadsheetId,

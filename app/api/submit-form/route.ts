@@ -3,9 +3,9 @@ import { getGoogleAuthClient, appendToSheet } from '@/lib/google-sheets';
 
 export async function POST(request: NextRequest) {
   try {
-    const { eventType, gameType, teamSize, collegeName, members } = await request.json();
+    const { eventType, gameType, teamSize, collegeName, teamName, members } = await request.json();
 
-    if (!eventType || !collegeName || !members || !members.length) {
+    if (!eventType || !collegeName || !teamName || !members || !members.length) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
@@ -40,12 +40,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Flatten array: [Event Type, College Name, Team Size, Captain Name, Captain Email, Captain Contact, Member 2 Name...]
+    // Flatten array: [Event Type, College Name, Team Name, Team Size, Captain Name, Captain Email, Captain Contact, Captain Game ID, Member 2 Name...]
     const displayEventType = gameType ? `${eventType} - ${gameType}` : eventType;
     const values = [
       timestamp,
       displayEventType,
       collegeName,
+      teamName,
       teamSize,
     ];
 
@@ -53,10 +54,10 @@ export async function POST(request: NextRequest) {
     const maxMembers = 4;
     for (let i = 0; i < maxMembers; i++) {
       if (i < members.length) {
-        values.push(members[i].name, members[i].email, members[i].contact);
+        values.push(members[i].name, members[i].email, members[i].contact, members[i].gameId || '');
       } else {
         // Padding for empty members to keep columns aligned
-        values.push('', '', '');
+        values.push('', '', '', '');
       }
     }
 

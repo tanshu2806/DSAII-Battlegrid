@@ -13,6 +13,7 @@ interface SuccessScreenProps {
   gameMode?: string;
   teamSize?: string;
   captainName?: string;
+  teamName?: string;
 }
 
 function getEntryFee(eventType?: string, gameType?: string, gameMode?: string): string {
@@ -31,7 +32,7 @@ function getEntryFee(eventType?: string, gameType?: string, gameMode?: string): 
   return '—';
 }
 
-export function SuccessScreen({ onReset, eventType, gameType, gameMode, teamSize, captainName }: SuccessScreenProps) {
+export function SuccessScreen({ onReset, eventType, gameType, gameMode, teamSize, captainName, teamName }: SuccessScreenProps) {
   const entryFee = getEntryFee(eventType, gameType, gameMode);
 
   const containerVariants = {
@@ -111,6 +112,12 @@ export function SuccessScreen({ onReset, eventType, gameType, gameMode, teamSize
             <div className="flex justify-between items-center">
               <span className="text-zinc-500 text-sm">Captain</span>
               <span className="text-zinc-200 text-sm font-medium">{captainName}</span>
+            </div>
+          )}
+          {teamName && (
+            <div className="flex justify-between items-center">
+              <span className="text-zinc-500 text-sm">Team Name</span>
+              <span className="text-zinc-200 text-sm font-medium">{teamName}</span>
             </div>
           )}
           <div className="flex justify-between items-center pt-2 border-t border-zinc-800 mt-1">

@@ -15,6 +15,7 @@ interface FormStep1Props {
     gameMode: string;
     teamSize: string;
     collegeName: string;
+    teamName: string;
   }) => void;
   isLoading: boolean;
 }
@@ -26,7 +27,8 @@ export function FormStep1({ onNext, isLoading }: FormStep1Props) {
     gameMode: "",
     teamSize: "1",
     collegeName: "",
-    members: [{ name: "", contact: "", email: "" }], // Captain is members[0]
+    teamName: "",
+    members: [{ name: "", contact: "", email: "", gameId: "" }], // Captain is members[0]
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -46,9 +48,12 @@ export function FormStep1({ onNext, isLoading }: FormStep1Props) {
     if (!formData.collegeName.trim())
       newErrors.collegeName = "College Name is required";
 
+    if (!formData.teamName.trim())
+      newErrors.teamName = "Team Name is required";
+
     formData.members.forEach(
       (
-        member: { name: string; contact: string; email: string },
+        member: { name: string; contact: string; email: string; gameId: string },
         index: number,
       ) => {
         if (!member.name.trim()) {
@@ -65,6 +70,10 @@ export function FormStep1({ onNext, isLoading }: FormStep1Props) {
           newErrors[`email_${index}`] = "Email is required";
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(member.email)) {
           newErrors[`email_${index}`] = "Please enter a valid email";
+        }
+
+        if (!member.gameId.trim()) {
+          newErrors[`gameId_${index}`] = "Game ID is required";
         }
       },
     );
@@ -92,6 +101,7 @@ export function FormStep1({ onNext, isLoading }: FormStep1Props) {
       name: "",
       contact: "",
       email: "",
+      gameId: "",
     }));
 
     setFormData({
@@ -145,6 +155,7 @@ export function FormStep1({ onNext, isLoading }: FormStep1Props) {
           gameMode: formData.gameMode,
           teamSize: formData.teamSize,
           collegeName: formData.collegeName,
+          teamName: formData.teamName,
         });
       } else {
         setErrors({ form: "Failed to submit form" });
@@ -258,6 +269,28 @@ export function FormStep1({ onNext, isLoading }: FormStep1Props) {
 
       <motion.div variants={itemVariants} className="mb-6">
         <label className="block text-sm font-medium text-zinc-300 mb-2">
+          Team Name
+        </label>
+        <Input
+          type="text"
+          placeholder="Enter your team name"
+          value={formData.teamName}
+          onChange={(e) => {
+            setFormData({ ...formData, teamName: e.target.value });
+            if (errors.teamName)
+              setErrors({ ...errors, teamName: "" });
+          }}
+          className="w-full bg-zinc-900 border-zinc-700 text-zinc-50 placeholder:text-zinc-600 focus:border-zinc-500 focus:ring-zinc-500"
+        />
+        {errors.teamName && (
+          <p className="text-red-400 text-sm mt-2">
+            {errors.teamName}
+          </p>
+        )}
+      </motion.div>
+
+      <motion.div variants={itemVariants} className="mb-6">
+        <label className="block text-sm font-medium text-zinc-300 mb-2">
           College Name
         </label>
               <Input
@@ -345,6 +378,26 @@ export function FormStep1({ onNext, isLoading }: FormStep1Props) {
                     {errors[`email_${index}`] && (
                       <p className="text-red-400 text-sm mt-1">
                         {errors[`email_${index}`]}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-zinc-400 mb-1">
+                      Game ID / User ID
+                    </label>
+                    <Input
+                      type="text"
+                      placeholder={`Enter ${index === 0 ? "Captain" : `Member ${index + 1}`} Game ID`}
+                      value={member.gameId}
+                      onChange={(e) =>
+                        handleMemberChange(index, "gameId", e.target.value)
+                      }
+                      className="w-full bg-zinc-900 border-zinc-700 text-zinc-50 placeholder:text-zinc-600 focus:border-zinc-500 focus:ring-zinc-500"
+                    />
+                    {errors[`gameId_${index}`] && (
+                      <p className="text-red-400 text-sm mt-1">
+                        {errors[`gameId_${index}`]}
                       </p>
                     )}
                   </div>
