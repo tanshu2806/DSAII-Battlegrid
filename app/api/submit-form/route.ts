@@ -3,7 +3,7 @@ import { getGoogleAuthClient, appendToSheet } from '@/lib/google-sheets';
 
 export async function POST(request: NextRequest) {
   try {
-    const { eventType, gameType, teamSize, collegeName, teamName, members } = await request.json();
+    const { eventType, gameType, teamSize, collegeName, referredBy, teamName, members } = await request.json();
 
     if (!eventType || !collegeName || !teamName || !members || !members.length) {
       return NextResponse.json(
@@ -40,28 +40,38 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Flatten array: [Event Type, College Name, Team Name, Team Size, Captain Name, Captain Email, Captain Contact, Captain Game ID, Member 2 Name...]
+    // Flatten array: [Event Type, College Name, Refered By, Team Name, Team Size, Captain Name, Captain Email, Captain Contact, Captain Game ID, Member 2 Name...]
     const displayEventType = gameType ? `${eventType} - ${gameType}` : eventType;
     const values = [
       timestamp,
       displayEventType,
       collegeName,
+      referredBy || '',
       teamName,
       teamSize,
     ];
 
-    // Max 4 members for all events
-    const maxMembers = 4;
+    // Max 5 members for all events (required for Valorant)
+    const maxMembers = 5;
     for (let i = 0; i < maxMembers; i++) {
       if (i < members.length) {
-        values.push(members[i].name, members[i].email, members[i].contact, members[i].gameId || '');
+        values.push(members[i].name, members[i].email, members[i].contact);
+        // User's sheet has duplicate M1 Contact column (Cols I and J)
+        if (i === 0) {
+          values.push(members[i].contact); 
+        }
+        values.push(members[i].gameId || '');
       } else {
         // Padding for empty members to keep columns aligned
-        values.push('', '', '', '');
+        // All members have 4 fields, but M1 has 5 due to duplicate contact
+        const fieldsCount = (i === 0) ? 5 : 4;
+        for (let j = 0; j < fieldsCount; j++) {
+          values.push('');
+        }
       }
     }
 
-    const range = `${sheetName}!A:Z`;
+    const range = `${sheetName}!A:AC`;
     await appendToSheet(auth, spreadsheetId, values, range);
 
     return NextResponse.json({

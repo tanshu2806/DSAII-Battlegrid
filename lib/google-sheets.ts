@@ -49,10 +49,10 @@ export async function appendToSheet(
 // Finds the row where the captain email matches (column G = index 6),
 // then writes Transaction ID to column V and Screenshot URL to column W.
 // Column layout per user's sheet:
-// A=Timestamp, B=EventType, C=College, D=TeamName, E=TeamSize,
-// F=M1Name, G=M1Email, H=M1Contact, I=M1GameID, J=M2Name, K=M2Email, L=M2Contact, M=M2GameID,
-// N=M3Name, O=M3Email, P=M3Contact, Q=M3GameID, R=M4Name, S=M4Email, T=M4Contact, U=M4GameID,
-// V=TransactionID, W=ScreenshotURL
+// A=Timestamp, B=EventType, C=College, D=ReferedBy, E=TeamName, F=TeamSize,
+// G=M1Name, H=M1Email, I=M1Contact, J=M1Contact, K=M1GameID, L=M2Name, M=M2Email, N=M2Contact, O=M2GameID,
+// P=M3Name, Q=M3Email, R=M3Contact, S=M3GameID, T=M4Name, U=M4Email, V=M4Contact, W=M4GameID,
+// X=M5Name, Y=M5Email, Z=M5Contact, AA=M5GameID, AB=TransactionID, AC=ScreenshotURL
 export async function updateRowWithPayment(
   auth: any,
   spreadsheetId: string,
@@ -71,11 +71,11 @@ export async function updateRowWithPayment(
 
   const rows = response.data.values || [];
 
-  // Find the last row where captain email matches (column G = index 6)
+  // Find the last row where captain email matches (column H = index 7)
   let targetRowIndex = -1;
   for (let i = 0; i < rows.length; i++) {
-    if (rows[i][6] === captainEmail) {
-      targetRowIndex = i; // keep going — match the most recent entry
+    if (rows[i][7] === captainEmail) {
+      targetRowIndex = i; // match the most recent entry
     }
   }
 
@@ -84,9 +84,9 @@ export async function updateRowWithPayment(
     return false;
   }
 
-  // Write Transaction ID to column V (21st col) and Screenshot URL to column W (22nd col)
-  // This matches the fixed header: ...M4GameID | Transaction ID | Screenshot
-  const cellRange = `${sheetName}!V${targetRowIndex + 1}:W${targetRowIndex + 1}`;
+  // Write Transaction ID to column AB (28th col) and Screenshot URL to column AC (29th col)
+  // This matches the user's fixed header: ...M5GameID | Transaction ID | Image link
+  const cellRange = `${sheetName}!AB${targetRowIndex + 1}:AC${targetRowIndex + 1}`;
 
   await sheets.spreadsheets.values.update({
     spreadsheetId,

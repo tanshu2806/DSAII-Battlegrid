@@ -15,6 +15,7 @@ interface FormStep1Props {
     gameMode: string;
     teamSize: string;
     collegeName: string;
+    referredBy?: string;
     teamName: string;
   }) => void;
   isLoading: boolean;
@@ -27,6 +28,7 @@ export function FormStep1({ onNext, isLoading }: FormStep1Props) {
     gameMode: "",
     teamSize: "1",
     collegeName: "",
+    referredBy: "",
     teamName: "",
     members: [{ name: "", contact: "", email: "", gameId: "" }], // Captain is members[0]
   });
@@ -120,6 +122,7 @@ export function FormStep1({ onNext, isLoading }: FormStep1Props) {
       name: "",
       contact: "",
       email: "",
+      gameId: "",
     }));
 
     setFormData({ ...formData, gameMode, teamSize: count.toString(), members: newMembers });
@@ -155,6 +158,7 @@ export function FormStep1({ onNext, isLoading }: FormStep1Props) {
           gameMode: formData.gameMode,
           teamSize: formData.teamSize,
           collegeName: formData.collegeName,
+          referredBy: formData.referredBy,
           teamName: formData.teamName,
         });
       } else {
@@ -310,6 +314,20 @@ export function FormStep1({ onNext, isLoading }: FormStep1Props) {
                 </p>
               )}
             </motion.div>
+      <motion.div variants={itemVariants} className="mb-6">
+        <label className="block text-sm font-medium text-zinc-300 mb-2">
+          Refered By (Optional)
+        </label>
+        <Input
+          type="text"
+          placeholder="Enter the name (if any)"
+          value={formData.referredBy}
+          onChange={(e) => {
+            setFormData({ ...formData, referredBy: e.target.value });
+          }}
+          className="w-full bg-zinc-900 border-zinc-700 text-zinc-50 placeholder:text-zinc-600 focus:border-zinc-500 focus:ring-zinc-500"
+        />
+      </motion.div>
 
             {(formData.gameType === "Valorant" || formData.gameMode) && formData.members.map((member, index) => (
               <motion.div

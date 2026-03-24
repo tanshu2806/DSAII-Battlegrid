@@ -10,10 +10,10 @@ type Step = 'step1' | 'step2' | 'success';
 
 export function FormContainer() {
   const [step, setStep] = useState<Step>('step1');
-  const [formData, setFormData] = useState({ eventType: 'Battle grid', gameType: '', gameMode: '', teamSize: '1', collegeName: '', teamName: '', members: [{ name: '', contact: '', email: '', gameId: '' }] });
+  const [formData, setFormData] = useState({ eventType: 'Battle grid', gameType: '', gameMode: '', teamSize: '1', collegeName: '', referredBy: '', teamName: '', members: [{ name: '', contact: '', email: '', gameId: '' }] });
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleStep1Next = (data: { name: string; contact: string; email: string; eventType: string; gameType: string; gameMode: string; teamSize: string; collegeName: string; teamName: string }) => {
+  const handleStep1Next = (data: { name: string; contact: string; email: string; eventType: string; gameType: string; gameMode: string; teamSize: string; collegeName: string; referredBy?: string; teamName: string }) => {
     setFormData((prev) => ({
       ...prev,
       eventType: data.eventType,
@@ -21,6 +21,7 @@ export function FormContainer() {
       gameMode: data.gameMode,
       teamSize: data.teamSize,
       collegeName: data.collegeName,
+      referredBy: data.referredBy || '',
       teamName: data.teamName,
       members: [{ name: data.name, contact: data.contact, email: data.email, gameId: '' }, ...prev.members.slice(1)]
     }));
@@ -37,7 +38,7 @@ export function FormContainer() {
 
   const handleReset = () => {
     setStep('step1');
-    setFormData({ eventType: 'Battle grid', gameType: '', gameMode: '', teamSize: '1', collegeName: '', teamName: '', members: [{ name: '', contact: '', email: '', gameId: '' }] });
+    setFormData({ eventType: 'Battle grid', gameType: '', gameMode: '', teamSize: '1', collegeName: '', referredBy: '', teamName: '', members: [{ name: '', contact: '', email: '', gameId: '' }] });
   };
 
   const progressVariants = {
