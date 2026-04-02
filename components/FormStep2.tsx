@@ -22,7 +22,7 @@ interface FormStep2Props {
 function getEntryFee(eventType: string, gameType?: string, gameMode?: string): string {
   if (eventType === 'Battle grid') {
     if (gameType === 'Valorant') return '₹250';
-    if (gameType === 'BGMI' || gameType === 'Free Fire') {
+    if (gameType === 'Free Fire') {
       if (gameMode === 'Squad') return '₹200';
       if (gameMode === 'Duo') return '₹120';
     }

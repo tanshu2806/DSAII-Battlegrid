@@ -43,7 +43,7 @@ export function FormStep1({ onNext, isLoading }: FormStep1Props) {
       newErrors.gameType = "Game selection is required";
     }
 
-    if ((formData.gameType === "BGMI" || formData.gameType === "Free Fire") && !formData.gameMode) {
+    if (formData.gameType === "Free Fire" && !formData.gameMode) {
       newErrors.gameMode = "Game mode (Duo/Squad) is required";
     }
 
@@ -96,7 +96,7 @@ export function FormStep1({ onNext, isLoading }: FormStep1Props) {
   // For Battle grid only, keep team-size driven member structure
 
   const handleGameTypeChange = (gameType: string) => {
-    // Valorant fixed 5; BGMI/Free Fire require mode selection
+    // Valorant fixed 5; Free Fire require mode selection
     const teamSize = gameType === "Valorant" ? "5" : "";
     const count = gameType === "Valorant" ? 5 : 0;
     const newMembers = Array.from({ length: count }, () => ({
@@ -232,7 +232,6 @@ export function FormStep1({ onNext, isLoading }: FormStep1Props) {
             Select Game
           </option>
           <option value="Valorant">Valorant</option>
-          <option value="BGMI">BGMI</option>
           <option value="Free Fire">Free Fire</option>
         </select>
         {errors.gameType && (
@@ -240,7 +239,7 @@ export function FormStep1({ onNext, isLoading }: FormStep1Props) {
         )}
       </motion.div>
 
-      {formData.gameType === "BGMI" || formData.gameType === "Free Fire" ? (
+      {formData.gameType === "Free Fire" ? (
         <motion.div variants={itemVariants} className="mb-6">
           <label className="block text-sm font-medium text-zinc-300 mb-2">
             Mode
